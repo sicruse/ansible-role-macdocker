@@ -34,4 +34,4 @@ MIT
 Author Information
 ------------------
 
-If you have any questions or comments feel free to reach me via [email](mailto:si@sicruse.com?subject=macdocker Feedback)
+If you have any questions or comments feel free to reach me via [email](mailto:si@sicruse.com?subject=macdocker%20Feedback)
