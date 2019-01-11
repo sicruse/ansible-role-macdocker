@@ -1,0 +1,16 @@
+---
+  - name: Remove Docker from MacOS Quarrantine
+    command: xattr -d -r com.apple.quarantine /Applications/Docker.app
+
+  - name: Stop Docker gracefully (if already running)
+    command: osascript -e 'quit app "Docker"'
+
+  - name: Install Docker Networking Components
+    become: true
+    command: /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+
+  - name: Complete Docker Setup
+    command: /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+
+  - name: Launch Docker
+    command: open --background -a Docker

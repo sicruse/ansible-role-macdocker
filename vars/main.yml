@@ -1,0 +1,4 @@
+---
+# defaults file for macdocker
+homebrew_cask_apps:
+  - docker
