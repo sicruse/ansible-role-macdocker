@@ -5,12 +5,37 @@
   - name: Stop Docker gracefully (if already running)
     command: osascript -e 'quit app "Docker"'
 
-  - name: Install Docker Networking Components
+  - name: Install Docker Networking Components - PrivilegedHelperTools
     become: true
-    command: /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+    synchronize:
+      src: /Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd
+      dest: /Library/PrivilegedHelperTools/com.docker.vmnetd
 
-  - name: Complete Docker Setup
-    command: /Applications/Docker.app/Contents/MacOS/Docker --quit-after-install --unattended
+  - name: Install Docker Networking Components - PrivilegedHelperTools Ownership
+    become: true
+    file:
+      path: /Library/PrivilegedHelperTools/com.docker.vmnetd
+      owner: root
+      group: wheel
+      mode: 0544
+
+  - name: Install Docker Networking Components - LaunchDaemons
+    become: true
+    synchronize:
+      src: /Applications/Docker.app/Contents/Resources/com.docker.vmnetd.plist
+      dest: /Library/LaunchDaemons/com.docker.vmnetd.plist
+
+  - name: Install Docker Networking Components - LaunchDaemons Ownership
+    become: true
+    file:
+      path: /Library/LaunchDaemons/com.docker.vmnetd.plist
+      owner: root
+      group: wheel
+      mode: 0644
+
+  - name: Launch Docker Networking Components
+    become: true
+    command: launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
   - name: Launch Docker
     command: open --background -a Docker
