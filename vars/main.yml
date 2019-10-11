@@ -2,3 +2,11 @@
 # defaults file for macdocker
 homebrew_cask_apps:
   - docker
+
+docker_app_paths_for_privilegedhelpertools:
+  src: "/Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd"
+  dest: "/Library/PrivilegedHelperTools/com.docker.vmnetd"
+
+docker_app_paths_for_launchdaemons:
+  src: "/Applications/Docker.app/Contents/Resources/com.docker.vmnetd.plist"
+  dest: "/Library/LaunchDaemons/com.docker.vmnetd.plist"

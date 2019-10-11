@@ -8,13 +8,13 @@
   - name: Install Docker Networking Components - PrivilegedHelperTools
     become: true
     synchronize:
-      src: /Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd
-      dest: /Library/PrivilegedHelperTools/com.docker.vmnetd
+      src: "{{ docker_app_paths_for_privilegedhelpertools.src }}"
+      dest: "{{ docker_app_paths_for_privilegedhelpertools.dest }}"
 
   - name: Install Docker Networking Components - PrivilegedHelperTools Ownership
     become: true
     file:
-      path: /Library/PrivilegedHelperTools/com.docker.vmnetd
+      path: "{{ docker_app_paths_for_privilegedhelpertools.dest }}"
       owner: root
       group: wheel
       mode: 0544
@@ -22,20 +22,20 @@
   - name: Install Docker Networking Components - LaunchDaemons
     become: true
     synchronize:
-      src: /Applications/Docker.app/Contents/Resources/com.docker.vmnetd.plist
-      dest: /Library/LaunchDaemons/com.docker.vmnetd.plist
+      src: "{{ docker_app_paths_for_launchdaemons.src }}"
+      dest: "{{ docker_app_paths_for_launchdaemons.dest }}"
 
   - name: Install Docker Networking Components - LaunchDaemons Ownership
     become: true
     file:
-      path: /Library/LaunchDaemons/com.docker.vmnetd.plist
+      path: "{{ docker_app_paths_for_launchdaemons.dest }}"
       owner: root
       group: wheel
       mode: 0644
 
   - name: Launch Docker Networking Components
     become: true
-    command: launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
+    command: launchctl load "{{ docker_app_paths_for_launchdaemons.dest }}"
 
   - name: Launch Docker
     command: open --background -a Docker
