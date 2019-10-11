@@ -1,8 +1,27 @@
 ---
-  - name: Remove Docker from MacOS Quarrantine
-    command: xattr -d -r com.apple.quarantine /Applications/Docker.app
+  - name: Detect if Docker is Quarantined
+    ignore_errors: yes
+    changed_when: false
+    shell: xattr -p com.apple.quarantine /Applications/Docker.app
+    register: quarantined_docker
 
-  - name: Stop Docker gracefully (if already running)
+  - name: Remove Docker from MacOS Quarantine
+    command: xattr -d -r com.apple.quarantine /Applications/Docker.app
+    when: quarantined_docker is success
+
+    # xattr:
+    #   path: /Applications/Docker.app
+    #   key: com.apple.quarantine
+    #   state: absent
+
+  - name: Detect if Docker is already running
+    ignore_errors: yes
+    changed_when: false
+    shell: pgrep -xq -- "Docker"
+    register: running_docker
+
+  - name: Stop Docker gracefully
+    when: running_docker is success
     command: osascript -e 'quit app "Docker"'
 
   - name: Install Docker Networking Components - PrivilegedHelperTools
@@ -35,7 +54,15 @@
 
   - name: Launch Docker Networking Components
     become: true
+    changed_when: false
     command: launchctl load "{{ docker_app_paths_for_launchdaemons.dest }}"
 
+  - name: Detect if Docker is running
+    ignore_errors: yes
+    changed_when: false
+    shell: pgrep -xq -- "Docker"
+    register: running_docker
+
   - name: Launch Docker
+    when: running_docker is failed
     command: open --background -a Docker
