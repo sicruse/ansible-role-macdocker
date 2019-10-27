@@ -26,9 +26,10 @@
 
   - name: Install Docker Networking Components - PrivilegedHelperTools
     become: true
-    synchronize:
+    copy:
       src: "{{ docker_app_paths_for_privilegedhelpertools.src }}"
       dest: "{{ docker_app_paths_for_privilegedhelpertools.dest }}"
+      remote_src: yes
 
   - name: Install Docker Networking Components - PrivilegedHelperTools Ownership
     become: true
@@ -40,9 +41,10 @@
 
   - name: Install Docker Networking Components - LaunchDaemons
     become: true
-    synchronize:
+    copy:
       src: "{{ docker_app_paths_for_launchdaemons.src }}"
       dest: "{{ docker_app_paths_for_launchdaemons.dest }}"
+      remote_src: yes
 
   - name: Install Docker Networking Components - LaunchDaemons Ownership
     become: true
